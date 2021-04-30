@@ -13,7 +13,7 @@ for i in range(0, N):
     my_list.append(list((x_coordinate_of_point, y_coordinate_of_point)))
 
 for j in my_list:
-    if j[0] > (j[0]**2 - 4*j[0] + 3) and j[1] < j[0] and j[1] < j[0]:
+    if j[1] >= (j[0]**2 - 4*j[0] + 3) and j[1] <= j[0] and j[1] >= 0:
         output_dictionary[j[0]] = j[1]
 
 if len(output_dictionary) == 0:
