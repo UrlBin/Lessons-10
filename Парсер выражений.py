@@ -3,32 +3,40 @@ string_for_calculation = ''
 
 input_string = input('Введите строку для парсинга арифметических выражений: ')
 
+if len(input_string) < 3 and input_string.find('+') == -1 and input_string.find('*') == -1:
+    input_string = input('Вы ввели не корректное выражение. \n'
+                         ' Введите заново строку для парсинга арифметических выражений: \n')
+    # print('storage_numerics', storage_numerics)
+
 storage_numerics = []
 storage_sign = []
 
 number = ''
+multiply_count = 0
 for i in range(0, len(input_string)):
     if input_string[i].isdigit() or input_string[i] == '.':
         number += input_string[i]
-        if i == len(input_string) - 1:
+        if i == len(input_string) - 1 and number != '':
             storage_numerics.append(number)
-            # print('storage_numerics', storage_numerics)
             break
-        # print('number', number)
     elif input_string[i] == ' ' and not storage_numerics:
         continue
     elif input_string[i] == ' ' and storage_numerics and number != '':
         storage_numerics.append(number)
         # print('storage_numerics', storage_numerics)
         number = ''
-    else:
-        if input_string[i] == '*' or input_string[i] == '+':
-            storage_sign.append(input_string[i])
-        # print('storage_sign', storage_sign)
+        # print('number', number)
+    elif input_string[i] == '*' or input_string[i] == '+':
         if number != '':
+            storage_sign.append(input_string[i])
             storage_numerics.append(number)
-            # print('storage_numerics', storage_numerics)
-        number = ''
+            number = ''
+            if input_string[i] == '*':
+                multiply_count += 1
+        else:
+            storage_sign.append(input_string[i])
+    else:
+        break
 
 print('storage_numerics', storage_numerics)
 print('storage_sign', storage_sign)
@@ -38,28 +46,41 @@ for j in range(0, len(storage_sign) - 1):
         storage_numerics.append(storage_numerics.pop(j))
         storage_sign.append(storage_sign.pop(j))
 
-print('storage_numerics', storage_numerics)
-print('storage_sign', storage_sign)
+print('storage_numerics after sorted -> ', storage_numerics)
+print('storage_sign after sorted -> ', storage_sign)
 
 for j in range(0, len(storage_sign)):
     if storage_sign[j] == '*' and j == 0:
-        if storage_numerics[j].isdecimal() or storage_numerics[j + 1].isdecimal():
+        if storage_numerics[j].isdecimal() and storage_numerics[j + 1].isdecimal():
             string_for_calculation = int(storage_numerics[j]) * int(storage_numerics[j + 1])
-            print('string_for_calculation in "*" -> ', string_for_calculation)
+            print('First string_for_calculation in if "*" (int) -> ', string_for_calculation)
         else:
             string_for_calculation = float(storage_numerics[j]) * float(storage_numerics[j + 1])
-            print('string_for_calculation in "*" -> ', string_for_calculation)
-    elif storage_sign[j] == '*':
+            print('First string_for_calculation in else "*" (float) -> ', string_for_calculation)
+    elif storage_sign[j] == '*' and j != 0:
         if storage_numerics[j].isdecimal():
             string_for_calculation *= int(storage_numerics[j + 1])
+            print('Next string_for_calculation in if "*" (int) -> ', string_for_calculation)
         else:
             string_for_calculation *= float(storage_numerics[j + 1])
-            print('string_for_calculation in second "*" -> ', string_for_calculation)
-    elif storage_sign[j] == '+' and type(storage_numerics[j]) == int:
-        string_for_calculation += int(storage_numerics[j + 1])
-        print('string_for_calculation in "+" -> ', string_for_calculation)
+            print('Next string_for_calculation in else "*" (float) -> ', string_for_calculation)
+    elif storage_sign[j] == '+':
+        if j == 0:
+            storage_numerics.append(storage_numerics.pop(j))
+            storage_sign.append(storage_sign.pop(j))
+        elif j != len(storage_sign) - 1 and storage_sign[j + 1] == '+':
+            storage_numerics.append(storage_numerics.pop(j))
+            storage_sign.append(storage_sign.pop(j))
+        else:
+            string_for_calculation += int(storage_numerics[j + 1])
+            # print('string_for_calculation in "+" (int) -> ', string_for_calculation)
     else:
+        # print('j (float) - ', j)
         string_for_calculation += float(storage_numerics[j + 1])
-        print('string_for_calculation in "+" -> ', string_for_calculation)
-print('string_for_calculation -> ', string_for_calculation)
+        # print('string_for_calculation in "+" (float) -> ', string_for_calculation)
 
+print('\n', 'Answer (string_for_calculation) -> ', string_for_calculation, sep='')
+
+print('Check by "eval()" function -> ', eval(input_string))
+
+# 1 + 2  *  3 *  4 + 5 * 2  + 10 + 21 + 31
