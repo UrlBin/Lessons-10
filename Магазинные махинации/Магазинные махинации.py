@@ -22,73 +22,48 @@ while True:
     input_one_command = input("")
     if input_one_command:
         commands_list.append(input_one_command.split())
-        # print(commands_list)
     else:
         break
-# print(len(commands_list))
-file = open(db_name, mode='r', encoding='utf-8')
 
-for j in file.readlines():
-    j = j.replace(' ', '').strip().split(';')
-    list_of_string.append([j[0].split(','), j[1]])
-    # print(output_list)
+file = open(db_name, mode='r', encoding='utf-8')
+string_acc = file.readlines()
+for n in string_acc:
+    if n:
+        string_from_acc = n.replace(' ', '').strip().split(';')
+        list_of_string.append([string_from_acc[0].split(','), string_from_acc[1]])
 file.close()
 
-for i in commands_list:
-    for j in list_of_string:
-        if i[0] == 'ИЗМЕНИТЬ' and i[1] == 'ЦЕНА':
+for i in list_of_string:
+    for j in commands_list:
+        if j[0] == 'ИЗМЕНИТЬ' and j[1] == 'ЦЕНА':
 
-            if j[0][0] == i[2]:
-                text = j[0][0] + ', ' + i[3] + '; ' + j[1] + '\n'
+            if i[0][0] == j[2]:
+                text = i[0][0] + ', ' + j[3] + '; ' + i[1] + '\n'
                 output_list.append(text)
-                # count += len(text)
-                # file.seek(count)
-            # else:
-            #     text = list_of_string[j][0][0] + ', ' + list_of_string[j][0][1] + '; ' + list_of_string[j][1] + '\n'
-            #     output_list.append(text)
-            #     # count += len(text)
-            #     # file.seek(count)
 
-        elif i[0] == 'ИЗМЕНИТЬ' and i[1] == 'КОЛВО':
+        elif j[0] == 'ИЗМЕНИТЬ' and j[1] == 'КОЛВО':
 
-            if j[0][0] == i[2]:
-                text = j[0][0] + ', ' + j[0][1] + '; ' + i[3] + '\n'
+            if i[0][0] == j[2]:
+                text = i[0][0] + ', ' + i[0][1] + '; ' + j[3] + '\n'
                 output_list.append(text)
-                # count += len(text)
-                # file.seek(count)
-            # else:
-            #     text = list_of_string[j][0][0] + ', ' + list_of_string[j][0][1] + '; ' + list_of_string[j][1] + '\n'
-            #     output_list.append(text)
-            #     # count += len(text)
-            #     # file.seek(count)
 
-        elif i[0] == 'ИЗМЕНИТЬ' and i[1] == 'ИМЯ':
+        elif j[0] == 'ИЗМЕНИТЬ' and j[1] == 'ИМЯ':
 
-            if j[0][0] == i[2]:
-                text = i[3] + ', ' + j[0][1] + '; ' + j[1] + '\n'
+            if i[0][0] == j[2]:
+                text = j[3] + ', ' + i[0][1] + '; ' + i[1] + '\n'
                 output_list.append(text)
-                # count += len(text)
-                # file.seek(count)
-            # else:
-            #     text = list_of_string[j][0][0] + ', ' + list_of_string[j][0][1] + '; ' + list_of_string[j][1] + '\n'
-            #     output_list.append(text)
-            #     # count += len(text)
-            #     # file.seek(count)
 
-        elif i[0] == 'УДАЛИТЬ':
+        elif j[0] == 'УДАЛИТЬ':
 
-            if j[0][0] == i[1]:
+            if i[0][0] == j[1]:
                 continue
-            else:
-                text = j[0][0] + ', ' + j[0][1] + '; ' + j[1] + '\n'
+                text = i[0][0] + ', ' + i[0][1] + '; ' + i[1] + '\n'
                 output_list.append(text)
-            #     # count += len(text)
-            #     # file.seek(count)
+            else:
+                continue
         else:
-            text = list_of_string[j][0][0] + ', ' + list_of_string[j][0][1] + '; ' + list_of_string[j][1] + '\n'
+            text = list_of_string[i][0][0] + ', ' + list_of_string[i][0][1] + '; ' + list_of_string[i][1] + '\n'
             output_list.append(text)
-            # count += len(text)
-            # file.seek(count)
 
 with open(db_name, mode='w', encoding='utf-8') as file:
     for k in output_list:
